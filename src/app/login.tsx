@@ -4,7 +4,7 @@ import Feather from '@expo/vector-icons/Feather';
 import Constants from "expo-constants";
 
 //Pages
-
+import Login from '@/components/login/form';
 
 export default function Index() {
   const image = require('@/assets/Home.png');
@@ -25,8 +25,9 @@ export default function Index() {
           }}>
             
             <Feather name="help-circle" size={35} color="white" />
-
           </View>
+        
+        <Login />
           
           
         </View>
