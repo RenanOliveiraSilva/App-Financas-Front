@@ -10,6 +10,7 @@ export function Footer() {
                 <Button 
                     textbutton='Comece Agora' 
                     onPress={() => router.navigate("/login")} 
+                    isLoading={false}
                 />
 
             </View>

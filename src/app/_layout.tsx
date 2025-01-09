@@ -27,7 +27,7 @@ export default function _Layout() {
 
 
     if (!fonstLoaded) {
-        return <Loading />
+        return <Loading colorLoading="gray" />
     }
 
     return (

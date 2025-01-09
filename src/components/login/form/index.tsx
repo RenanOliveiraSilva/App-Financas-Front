@@ -7,13 +7,17 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { api } from "@/services/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 
 export default function Form() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [keepConnected, setKeepConnected] = useState(false);
+    const [isLoginLoading, SetIsLoginLoading] = useState(false);
 
     async function handleLogin() {
+        SetIsLoginLoading(true);
+
         if(!email || !password) {
             Alert.alert('Erro', 'Preencha todos os campos')
             return
@@ -25,18 +29,25 @@ export default function Form() {
                 password
             });
 
+
             if (response.status === 200) {
                 const token = response.data.token;
+                const userId = String(response.data.user.id);
 
                 // Armazenar o Token Localmente
                 await AsyncStorage.setItem('token', token);
+                await AsyncStorage.setItem('userId', userId);
                 Alert.alert('Sucesso', 'Login realizado com sucesso!');
+
+                 // ✅ Redirecionamento corrigido com o formato correto
+                router.navigate(`/user/${userId}`);
                 
                 return;
             }
 
 
         } catch (error: any) {
+            SetIsLoginLoading(false);
             Alert.alert('Erro', 'Credenciais inválidas');
             console.log(error);
         }
@@ -100,6 +111,8 @@ export default function Form() {
                     <Button 
                         textbutton='Entrar' 
                         onPress={handleLogin}
+                        isLoading={isLoginLoading}
+                        
                     />
 
                 </View>
