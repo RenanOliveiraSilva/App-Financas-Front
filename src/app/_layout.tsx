@@ -2,6 +2,8 @@ import { StatusBar } from "react-native";
 import { Stack } from "expo-router";
 import { colors } from "@/styles/colors";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import Toast from 'react-native-toast-message';
             
 import { Loading } from "@/components/loading";
 
@@ -32,17 +34,19 @@ export default function _Layout() {
 
     return (
         <GestureHandlerRootView>
-            <StatusBar backgroundColor="transparent" translucent={true} />
+            <SafeAreaProvider>
+                <StatusBar backgroundColor="transparent" translucent={true} />
 
-            <Stack screenOptions={{
-                headerShown: false,
-                contentStyle: {
-                    backgroundColor: colors.gray.base
+                <Stack screenOptions={{
+                    headerShown: false,
+                    contentStyle: {
+                        backgroundColor: colors.gray.base
 
-                },
-            }}>
-            
-            </Stack>
+                    },
+                }} />
+                <Toast />
+
+            </SafeAreaProvider>
         </GestureHandlerRootView>
         
     );

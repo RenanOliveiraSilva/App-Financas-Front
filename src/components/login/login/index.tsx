@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, Keyboard } from 'react-native';
 import { Button } from '@/components/button';
 import { s } from './styles';
 import { colors } from '@/styles/theme';
@@ -8,18 +8,33 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { api } from "@/services/api"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
-export default function Form() {
+type loginProps = {
+    changeScreens: () => void;
+}
+
+export default function login({changeScreens}: loginProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [keepConnected, setKeepConnected] = useState(false);
     const [isLoginLoading, SetIsLoginLoading] = useState(false);
+    const [isPasswordVisible, SetIsPasswordVisible] = useState(false);
 
     async function handleLogin() {
+        Keyboard.dismiss();
         SetIsLoginLoading(true);
 
         if(!email || !password) {
-            Alert.alert('Erro', 'Preencha todos os campos')
+            SetIsLoginLoading(false);
+
+            Toast.show({
+                type: 'info',
+                text1: 'Campos Inválido',
+                text2: 'Preencha todos os campos e tente novamente.',
+            });
+
             return
         }
 
@@ -37,10 +52,17 @@ export default function Form() {
                 // Armazenar o Token Localmente
                 await AsyncStorage.setItem('token', token);
                 await AsyncStorage.setItem('userId', userId);
-                Alert.alert('Sucesso', 'Login realizado com sucesso!');
+                //Alert.alert('Sucesso', 'Login realizado com sucesso!');
+
+                Toast.show({
+                    type: 'sucess',
+                    text1: 'Usuário e Senha e corretos!',
+                    text2: 'Aguarde o redirecionamento.',
+                });
+
 
                  // ✅ Redirecionamento corrigido com o formato correto
-                router.navigate(`/user/${userId}`);
+                router.navigate(`/user/homeScreen`);
                 
                 return;
             }
@@ -48,14 +70,19 @@ export default function Form() {
 
         } catch (error: any) {
             SetIsLoginLoading(false);
-            Alert.alert('Erro', 'Credenciais inválidas');
+            // Alert.alert('Erro', 'Credenciais inválidas');
+            Toast.show({
+                type: 'error',
+                text1: 'Usuário ou Senha e incorretos!',
+                text2: 'Usuário ou senha inválidos, tente novamente.',
+            });
             console.log(error);
         }
 
     }
 
     return (
-        <View style={s.container}>
+        <SafeAreaView style={s.container}>
             <Text style={s.title}>
                 Bem-Vindo 
             </Text>
@@ -85,10 +112,16 @@ export default function Form() {
                     placeholderTextColor={colors.gray.light}
                     value={password}
                     onChangeText={setPassword}
-                    secureTextEntry
+                    secureTextEntry={!isPasswordVisible}
                     selectionColor={colors.purple.light}
                 />
 
+                {isPasswordVisible ? 
+                    <MaterialIcons name="visibility" size={18} color={colors.gray.light} onPress={() => SetIsPasswordVisible(false)} />
+                    :
+                    <MaterialIcons name="visibility-off" size={18} color={colors.gray.light} onPress={() => SetIsPasswordVisible(true)} /> 
+                }
+                
             </View>
 
             <View style={s.mantenhaConectado}>
@@ -129,10 +162,12 @@ export default function Form() {
                 <Text style={s.subtitle}>
                     Ainda não tem uma conta?
                 </Text>
-                <Text style={s.subtitlePurple}>
-                    Cadastre-se
-                </Text>
+                <TouchableOpacity onPress={changeScreens}>
+                    <Text style={s.subtitlePurple} >
+                        Cadastre-se
+                    </Text>
+                </TouchableOpacity>
             </View>
-        </View>
+        </SafeAreaView>
     );
 }
