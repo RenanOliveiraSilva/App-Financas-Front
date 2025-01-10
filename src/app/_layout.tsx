@@ -3,12 +3,13 @@ import { Stack } from "expo-router";
 import { colors } from "@/styles/colors";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Toast from 'react-native-toast-message';
-            
+
+//Componentes
+import ToastComponent from "@/components/toast";
 import { Loading } from "@/components/loading";
 
 //Importando as fonts
-import {
+import {    
     useFonts,
     Poppins_300Light,
     Poppins_400Regular,
@@ -44,7 +45,7 @@ export default function _Layout() {
 
                     },
                 }} />
-                <Toast />
+                <ToastComponent />
 
             </SafeAreaProvider>
         </GestureHandlerRootView>

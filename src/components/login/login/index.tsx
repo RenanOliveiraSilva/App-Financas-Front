@@ -3,13 +3,15 @@ import { View, Text, TextInput, TouchableOpacity, Alert, Keyboard } from 'react-
 import { Button } from '@/components/button';
 import { s } from './styles';
 import { colors } from '@/styles/theme';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { api } from "@/services/api"
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+//Icons
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 type loginProps = {
     changeScreens: () => void;
@@ -22,6 +24,11 @@ export default function login({changeScreens}: loginProps) {
     const [isLoginLoading, SetIsLoginLoading] = useState(false);
     const [isPasswordVisible, SetIsPasswordVisible] = useState(false);
 
+    const validateEmail = (email: string): boolean => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
     async function handleLogin() {
         Keyboard.dismiss();
         SetIsLoginLoading(true);
@@ -30,12 +37,23 @@ export default function login({changeScreens}: loginProps) {
             SetIsLoginLoading(false);
 
             Toast.show({
-                type: 'info',
+                type: 'warning',
                 text1: 'Campos Inválido',
                 text2: 'Preencha todos os campos e tente novamente.',
             });
 
             return
+        }
+
+        if (!validateEmail(email)) {
+            SetIsLoginLoading(false);
+            
+            Toast.show({
+                type: 'warning',
+                text1: 'E-mail inválido!',
+                text2: 'Por favor, insira um e-mail válido.',
+            });
+            return;
         }
 
         try {
@@ -55,15 +73,16 @@ export default function login({changeScreens}: loginProps) {
                 //Alert.alert('Sucesso', 'Login realizado com sucesso!');
 
                 Toast.show({
-                    type: 'sucess',
+                    type: 'success',
                     text1: 'Usuário e Senha e corretos!',
-                    text2: 'Aguarde o redirecionamento.',
+                    text2: 'Bem-Vindo de volta 🙂',
                 });
 
 
-                 // ✅ Redirecionamento corrigido com o formato correto
-                router.navigate(`/user/homeScreen`);
                 
+                // ✅ Redirecionamento corrigido com o formato correto
+                router.navigate(`/user/homeScreen`);
+                SetIsLoginLoading(false);
                 return;
             }
 
@@ -73,7 +92,7 @@ export default function login({changeScreens}: loginProps) {
             // Alert.alert('Erro', 'Credenciais inválidas');
             Toast.show({
                 type: 'error',
-                text1: 'Usuário ou Senha e incorretos!',
+                text1: 'Usuário ou Senha incorretos!',
                 text2: 'Usuário ou senha inválidos, tente novamente.',
             });
             console.log(error);

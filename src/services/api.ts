@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const api = axios.create({
     baseURL: 'https://app-financas-ccby.onrender.com/api',
-    timeout: 15000,
+    timeout: 5000,
 })
 
 // Interceptador para Adicionar o Token
