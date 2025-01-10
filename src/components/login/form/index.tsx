@@ -40,7 +40,7 @@ export default function Form() {
                 Alert.alert('Sucesso', 'Login realizado com sucesso!');
 
                  // ✅ Redirecionamento corrigido com o formato correto
-                router.navigate(`/user/${userId}`);
+                router.navigate(`/user/homeScreen`);
                 
                 return;
             }
