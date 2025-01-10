@@ -22,7 +22,7 @@ export const s = StyleSheet.create({
         padding: 8,
         marginVertical: 10,
         color: colors.gray.light,
-        width: '100%',
+        flex: 1,
         fontFamily: fontFamily.medium,
         fontSize: 15,
         marginLeft: 10
@@ -83,6 +83,14 @@ export const s = StyleSheet.create({
         textShadowOffset: { width: 2, height: 2 }, // Deslocamento da sombra
         textShadowRadius: 5,
         marginBottom: 2,
+    },
+    messageText: {
+        color: colors.gray.light,
+        fontFamily: fontFamily.light,
+        fontSize: 10,
+        textShadowColor: 'rgba(0, 0, 0, 0.75)', // Cor da sombra
+        textShadowOffset: { width: 2, height: 2 }, // Deslocamento da sombra
+        textShadowRadius: 5
     }
 
 })

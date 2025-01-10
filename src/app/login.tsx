@@ -1,14 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, ImageBackground, StyleSheet, Text } from 'react-native'
 import Feather from '@expo/vector-icons/Feather';
 import Constants from "expo-constants";
 
 //Pages
-import Login from '@/components/login/form';
+import Login from '@/components/login/login';
+import Register from '@/components/login/register';
 
 export default function Index() {
+  const [isLoginOrRegister, setIsLoginOrRegister] = useState(true);
+
   const image = require('@/assets/Home.png');
   const StatusBarHeight = Constants.statusBarHeight;
+
+  function changeScreenFalse() {
+    setIsLoginOrRegister(false);
+  }
   
   return (
     <ImageBackground 
@@ -27,7 +34,14 @@ export default function Index() {
             <Feather name="help-circle" size={35} color="white" />
           </View>
         
-        <Login />
+        {isLoginOrRegister ? 
+          <Login 
+            changeScreens={changeScreenFalse}
+          /> :
+          <Register />
+        }
+        
+
           
           
         </View>
